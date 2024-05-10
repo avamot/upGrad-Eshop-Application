@@ -66,10 +66,6 @@ export default function Login() {
     const [token, setToken] = useState();
     const [isLoggedIn, setIsLoggedIn, error, setError] = useContext(IsLoggedInContext);
     const history = useNavigate(); 
-
-
-    console.log("context: ", IsLoggedInContext);
-    console.log("useContext(context): ", useContext(IsLoggedInContext));
   
     const handleLogin = async (e) => { 
         e.preventDefault();
@@ -92,14 +88,14 @@ export default function Login() {
             const header = `Authorization: Bearer ${response.data.token}`;
             console.log("header", header);
            // return axios.get(URLConstants.USER_URL, { headers: { header } });
-            try{
-                await axios.get('http://localhost:8080/api/users', { headers: { header } });
+            // try{
+            //     await axios.get('http://localhost:8080/api/users', { headers: { header } });
 
-            } catch (error){
-                setError(error.response.status);
-                console.log("error.response.status",error.response.status)
+            // } catch (error){
+            //     setError(error.response.status);
+            //     console.log("error.response.status",error.response.status)
 
-            }
+            // }
                 history('/products'); 
 
                  

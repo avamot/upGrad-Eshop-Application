@@ -28,7 +28,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 // }
 const AddProduct = () => {
   const [navbarUserIsLogged,setnavbarUserIsLogged, error, setError] = useContext(IsLoggedInContext);
-  console.log("Inside addProduct:", error)
+ 
    if(error !== 401){
     return (
         <Link href="/" m={1} color="inherit" variant='body2'>Add Product</Link>
@@ -42,7 +42,7 @@ const DisplayLinks = () => {
   
 
   const history = useNavigate(); 
-  console.log(error);
+ 
 
  
 
@@ -70,7 +70,7 @@ const DisplayLinks = () => {
   //   })();
   // }, []);
     if (navbarUserIsLogged) {
-      console.log('navbarUserIsLogged', {navbarUserIsLogged});
+      
       return (<div>
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 4 }}> 
         <Link href="/" m={1} color="inherit" variant='body2'>Home</Link>

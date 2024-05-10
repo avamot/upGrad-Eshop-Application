@@ -6,7 +6,8 @@ import IsLoggedInContext from './components/IsLoggedInContext';
 import { useState } from "react";
 import NavigationBar from "./components/NavigationBar";
 import { Auth0Provider } from '@auth0/auth0-react';
-import Products from "./pages/Products";
+import Products from "./components/Product/Products";
+import ProductCard from "./common/ProductCard";
 
 
 
