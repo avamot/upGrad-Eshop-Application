@@ -23,11 +23,11 @@ const Dropdown = () => {
 
                     <option value="default">Default</option>
 
-                    <option value="option1">Price: High to Low</option>
+                    <option value="HighToLow">Price: High to Low</option>
 
-                    <option value="option2">Price: Low to High</option>
+                    <option value="LowToHigh">Price: Low to High</option>
 
-                    <option value="option3">Newest</option>
+                    <option value="Newest">Newest</option>
 
                 </select>
 

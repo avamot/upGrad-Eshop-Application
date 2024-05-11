@@ -22,10 +22,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 
 
-// const ifLoggedIn = (props) => {
-//   const isLoggedIn = props.isLoggedIn;
-//   return isLoggedIn;
-// }
+
 const AddProduct = () => {
   const [navbarUserIsLogged,setnavbarUserIsLogged, error, setError] = useContext(IsLoggedInContext);
  
@@ -136,8 +133,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
-const NavigationBar = () => {
-
+const NavigationBar = ({getSearchText}) => {
+//  const [text, setText] = useState('');
+  
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -161,6 +159,7 @@ const NavigationBar = () => {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
+              onChangeCapture={newText => getSearchText(newText)}
             />
           </Search>
 
