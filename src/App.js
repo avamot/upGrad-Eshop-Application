@@ -9,6 +9,8 @@ import { Auth0Provider } from '@auth0/auth0-react';
 import Products2 from "./components/Product/Products2";
 import Products from "./components/Product/Products";
 import ProductCard from "./common/ProductCard";
+import ProductDetail from "./components/ProductDetail/ProductDetail";
+import AddProducts from './components/AddProducts';
 
 
 
@@ -31,6 +33,8 @@ function App() {
           <Route path="/signup" element={<Signup/>} />
           <Route path="/home" element={<Home/>} />
           <Route path="/products" element={<Products/>} />
+          <Route path="/products/:id" element={<ProductDetail/>} />
+          <Route path="/addProduct" element={<AddProducts/>} />
         </Routes>  
          </IsLoggedInContext.Provider>
       </BrowserRouter>

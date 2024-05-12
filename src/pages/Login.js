@@ -19,6 +19,7 @@ import { jwtDecode } from 'jwt-decode' ;
 
 
 
+
 const useStyles = makeStyles(theme => ({
     "@global": {
         body: {
@@ -66,6 +67,7 @@ export default function Login() {
     const [token, setToken] = useState();
     const [isLoggedIn, setIsLoggedIn, error, setError] = useContext(IsLoggedInContext);
     const history = useNavigate(); 
+    
   
     const handleLogin = async (e) => { 
         e.preventDefault();
@@ -73,11 +75,20 @@ export default function Login() {
             const response = await axios.post('http://localhost:8080/api/auth/signin', 
             { username, password }); 
 
+            sessionStorage.setItem('myTokenName', response.data.token);
+            console.log(sessionStorage.getItem('myTokenName'));
+             
             // const response = await axios.get('http://localhost:8080/api/users', 
             // { username, password }); 
            
             console.log('Login successful:', response); 
+
+            localStorage.setItem("token", response.data.token); //set token in localstorage
+         localStorage.setItem("role", response.data.role);
            
+         console.log("response.data.token", response.data.token);
+         console.log("response.data.role", response.data.role);
+
             setIsLoggedIn({
                 isLoggedIn: true,
                 token: response.data.token
@@ -85,8 +96,8 @@ export default function Login() {
                 console.log("isLoggedIn",isLoggedIn);
                 console.log(token);
             })
-            const header = `Authorization: Bearer ${response.data.token}`;
-            console.log("header", header);
+            // const header = `Authorization: Bearer ${response.data.token}`;
+            // console.log("header", header);
            // return axios.get(URLConstants.USER_URL, { headers: { header } });
             // try{
             //     await axios.get('http://localhost:8080/api/users', { headers: { header } });

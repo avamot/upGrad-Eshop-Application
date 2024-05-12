@@ -1,17 +1,17 @@
-const express = require('express');
-const cors = require('cors');
-const app = express();
+const basicAuth = require('express-basic-auth');
 
-app.use(cors());
-const port = 5002; // You can choose any port
 
-app.get('http://localhost:3005/signup', (req, res) => {
-  res.send('Hello from the Node.js backend!');
-});
-app.post('http://localhost:8081/api/auth/signup', (req, res) => {
-  return res.send('Received a POST HTTP method');
+const auth = basicAuth({
+  users: {
+    admin: '123',
+    user: '456',
+  },
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port number ${port}`);
-});
+app.get('/api/authenticate', auth, (req, res) => {
+    if (req.auth.user === 'admin') {
+      res.send('admin');
+    } else if (req.auth.user === 'user') {
+      res.send('user');
+    }
+  });

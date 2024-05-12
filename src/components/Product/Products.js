@@ -15,6 +15,7 @@ import CardActions from '@mui/material/CardActions';
 import { Grid } from '@material-ui/core';
 import { CardActionArea, CardMedia, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -85,8 +86,6 @@ export default function Products() {
         if (newAlignment != null) {
             setAlignment(newAlignment);
         }
-        
-
     };
 
     let [categories, setCategories] = useState([]);
@@ -142,7 +141,9 @@ export default function Products() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
-                                            <Button size="medium">Buy</Button>
+                                        <Link to={`/products/${product.id}`}>
+                                            <Button size="lg">Buy</Button>
+                                            </Link>
                                             <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
                                                     <EditIcon />
@@ -187,7 +188,9 @@ export default function Products() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
-                                            <Button size="medium">Buy</Button>
+                                        <Link to={`/products/${product.id}`}>
+                                            <Button size="lg">Buy</Button>
+                                            </Link>
                                             <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
                                                     <EditIcon />
@@ -233,7 +236,9 @@ export default function Products() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
-                                            <Button size="medium">Buy</Button>
+                                        <Link to={`/products/${product.id}`}>
+                                            <Button size="lg">Buy</Button>
+                                            </Link>
                                             <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
                                                     <EditIcon />
@@ -278,7 +283,9 @@ export default function Products() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
-                                            <Button size="medium">Buy</Button>
+                                        <Link to={`/products/${product.id}`}>
+                                            <Button size="lg">Buy</Button>
+                                            </Link>
                                             <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
                                                     <EditIcon />
@@ -327,7 +334,9 @@ export default function Products() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
-                                            <Button size="medium">Buy</Button>
+                                        <Link to={`/products/${product.id}`}>
+                                            <Button size="lg">Buy</Button>
+                                            </Link>
                                             <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
                                                     <EditIcon />
@@ -372,7 +381,9 @@ export default function Products() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
-                                            <Button size="medium">Buy</Button>
+                                        <Link to={`/products/${product.id}`}>
+                                            <Button size="lg">Buy</Button>
+                                            </Link>
                                             <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
                                                     <EditIcon />
@@ -418,7 +429,9 @@ export default function Products() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
-                                            <Button size="medium">Buy</Button>
+                                        <Link to={`/products/${product.id}`}>
+                                            <Button size="lg">Buy</Button>
+                                            </Link>
                                             <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
                                                     <EditIcon />
@@ -463,7 +476,9 @@ export default function Products() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
-                                            <Button size="medium">Buy</Button>
+                                        <Link to={`/products/${product.id}`}>
+                                            <Button size="lg">Buy</Button>
+                                            </Link>
                                             <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
                                                     <EditIcon />

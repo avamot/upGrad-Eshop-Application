@@ -23,14 +23,19 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 
 
-const AddProduct = () => {
+const AddProductLinks = () => {
+
+  console.log('document.URL',window.location.href);
   const [navbarUserIsLogged,setnavbarUserIsLogged, error, setError] = useContext(IsLoggedInContext);
  
-   if(error !== 401){
+  if (window.location.href === 'http://localhost:3002/products') {
+    console.log("inside")
+  //  if(error !== 401){
     return (
-        <Link href="/" m={1} color="inherit" variant='body2'>Add Product</Link>
+        <Link href="/addProduct" m={1} color="inherit" variant='body2'>Add Product</Link>
     )
-   }
+  // }
+}
 };
 
 const DisplayLinks = () => {
@@ -71,7 +76,7 @@ const DisplayLinks = () => {
       return (<div>
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 4 }}> 
         <Link href="/" m={1} color="inherit" variant='body2'>Home</Link>
-        <AddProduct />
+        <AddProductLinks />
         <Button type="submit" onClick={handleLogout} variant="contained" color="error">LOGOUT</Button>
         </Box>
       </div>)

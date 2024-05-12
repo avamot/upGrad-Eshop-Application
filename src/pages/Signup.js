@@ -47,13 +47,14 @@ export default function SignUp() {
     const classes = useStyles();
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [role, setRole] = useState([]);
+    const [role, setRole] = useState(['admin','user']);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState(''); 
     const [contactNumber, setContactNumber] = useState(''); 
     const [error, setError] = useState(''); // State to manage error messages 
     const [isLoggedIn, setIsLoggedIn] = useContext(IsLoggedInContext);
+    
    
     const history = useNavigate(); 
 
@@ -81,26 +82,30 @@ export default function SignUp() {
                 lastName,
                 contactNumber
             }); 
+
+            sessionStorage.setItem('myTokenName', response.data.token);
+            console.log(sessionStorage.getItem('myTokenName'));
+             
             // Handle successful signup 
            
-            console.log(response.data); 
+            console.log(response); 
 
             setIsLoggedIn({
                 isLoggedIn: true
             }, () => {
                 console.log(isLoggedIn);
             })
-            const header = `Authorization: Bearer ${response.data.token}`;
-            console.log("header", header);
+            // const header = `Authorization: Bearer ${response.data.token}`;
+            // console.log("header", header);
            // return axios.get(URLConstants.USER_URL, { headers: { header } });
-            try{
-                await axios.get('http://localhost:8080/api/users', { headers: { header } });
+            // try{
+            //     await axios.get('http://localhost:8080/api/users', { headers: { header } });
 
-            } catch (error){
-                setError(error.response.status);
-                console.log("error.response.status",error.response.status)
+            // } catch (error){
+            //     setError(error.response.status);
+            //     console.log("error.response.status",error.response.status)
 
-            }
+            // }
 
             history('/products'); 
         } catch (error) { 
