@@ -64,15 +64,7 @@ export default function SignUp() {
         try { 
 
             e.preventDefault();
-            // Check for empty fields 
-            // if (!firstName || !lastName || !password || !confirmPassword || !email || !contactNumber) { 
-            //     setError('Please fill in all fields.'); 
-            //     return; 
-            // } 
-  
-            // if (password !== confirmPassword) { 
-            //     throw new Error("Passwords do not match"); 
-            // } 
+           
   
             const response = await axios.post('http://localhost:8080/api/auth/signup', { 
                 email, 

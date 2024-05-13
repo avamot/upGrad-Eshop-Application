@@ -15,6 +15,10 @@ import { IsLoggedInContext } from '../components/IsLoggedInContext';
 import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios'; 
 import { jwtDecode } from 'jwt-decode' ;
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { green } from "@mui/material/colors";
+import '../components/login.css';
 
 
 
@@ -107,6 +111,7 @@ export default function Login() {
             //     console.log("error.response.status",error.response.status)
 
             // }
+           
                 history('/products'); 
 
                  

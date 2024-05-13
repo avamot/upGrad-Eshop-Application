@@ -28,7 +28,7 @@ const AddProductLinks = () => {
   console.log('document.URL',window.location.href);
   const [navbarUserIsLogged,setnavbarUserIsLogged, error, setError] = useContext(IsLoggedInContext);
  
-  if (window.location.href === 'http://localhost:3002/products') {
+  if (window.location.href === 'http://localhost:3003/products') {
     console.log("inside")
   //  if(error !== 401){
     return (
@@ -39,7 +39,7 @@ const AddProductLinks = () => {
 };
 
 const DisplayLinks = () => {
-  
+  const token = sessionStorage.getItem('myTokenName');
   const [navbarUserIsLogged,setnavbarUserIsLogged, error, setError] = useContext(IsLoggedInContext);
   
 
@@ -54,13 +54,14 @@ const DisplayLinks = () => {
 
   
 
-  const handleLogout = async () => { 
+  const handleLogout = () => { 
    
-    setnavbarUserIsLogged({
-      navbarUserIsLogged: false
-    }, () => {
-        console.log(navbarUserIsLogged);
-    })
+    // setnavbarUserIsLogged({
+    //   navbarUserIsLogged: false
+    // }, () => {
+    //     console.log(navbarUserIsLogged);
+    // })
+     sessionStorage.removeItem('myTokenName');
     history('/'); 
   }; 
   // console.log('IsLoggedInContextNav', IsLoggedInContext);
@@ -71,11 +72,11 @@ const DisplayLinks = () => {
   //     if (navbarUserIsLogged) setnavbarUserIsLogged(true);
   //   })();
   // }, []);
-    if (navbarUserIsLogged) {
+    if (token) {
       
       return (<div>
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 4 }}> 
-        <Link href="/" m={1} color="inherit" variant='body2'>Home</Link>
+        <Link href="/products" m={1} color="inherit" variant='body2'>Home</Link>
         <AddProductLinks />
         <Button type="submit" onClick={handleLogout} variant="contained" color="error">LOGOUT</Button>
         </Box>

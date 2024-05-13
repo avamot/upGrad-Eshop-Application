@@ -11,7 +11,8 @@ import Products from "./components/Product/Products";
 import ProductCard from "./common/ProductCard";
 import ProductDetail from "./components/ProductDetail/ProductDetail";
 import AddProducts from './components/AddProducts';
-
+import ModifyProduct from "./components/ModifyProduct.tsx";
+import DialogueBox from './common/DialogueBox.js'
 
 
 function App() {
@@ -20,25 +21,27 @@ function App() {
  const [error, setError] = useState();
  const isUserLoggedIn = sessionStorage.getItem("authenticatedUser");
  console.log(isUserLoggedIn);
+ const token = sessionStorage.getItem('myTokenName');
+
+ console.log("token", token);
 
   return (
     
       <div className="wrapper">
-      <Auth0Provider>
       <BrowserRouter>
       <IsLoggedInContext.Provider value={[isLoggedIn, setIsLoggedIn, error, setError]}>
         <Routes>
-          <Route path="/" element={<Login/>} />
-          <Route path="/login" element={<Login/>} />
+         <Route path="/" element={<Login />} /> 
           <Route path="/signup" element={<Signup/>} />
           <Route path="/home" element={<Home/>} />
           <Route path="/products" element={<Products/>} />
           <Route path="/products/:id" element={<ProductDetail/>} />
           <Route path="/addProduct" element={<AddProducts/>} />
+          <Route path="products/modifyProduct/:id" element={<ModifyProduct/>} />
         </Routes>  
          </IsLoggedInContext.Provider>
       </BrowserRouter>
-      </Auth0Provider>
+     
       
     </div>
 

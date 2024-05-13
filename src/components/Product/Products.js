@@ -15,7 +15,18 @@ import CardActions from '@mui/material/CardActions';
 import { Grid } from '@material-ui/core';
 import { CardActionArea, CardMedia, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+//import '../Product/addProducts.css';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,40 +47,80 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Products() {
     const [alignment, setAlignment] = useState('all');
+    const [open, setOpen] = useState(false);
     const [value, setValue] = React.useState('');
     let [newProducts, setNewProducts] = React.useState([]);
     const [sortedProducts, setSortedProducts] = useState([]);
     const [sortedFilteredProducts, setSortedFilteredProducts] = useState([]);
     const [filteredBySearchProducts, setFilteredBySearchProducts] = useState([]);
     let [searchText, setSearchText] = useState();
+    const theme = useTheme();
+    const [confirm, setConfirm] = React.useState(false);
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const history = useNavigate();
 
     const getSearchText = (event) => {
-        
-       const text = event.target.value;
-       
+
+        const text = event.target.value;
+
 
         setSearchText(text);
-        
-    
-        
-        if(!(text === undefined || text.length === 0)) {
-          console.log(searchText);
+
+
+
+        if (!(text === undefined || text.length === 0)) {
+            console.log(searchText);
             const filteredProducts = products.filter(product => {
-                return  (product.category.toLowerCase().includes(text.toLowerCase()) ||
-                         product.name.toLowerCase().includes(text.toLowerCase()) ||
-                         product.description.toLowerCase().includes(text.toLowerCase()))
-                })
-                 
-                setFilteredBySearchProducts([...filteredProducts]);
-                 console.log([filteredProducts]);
+                return (product.category.toLowerCase().includes(text.toLowerCase()) ||
+                    product.name.toLowerCase().includes(text.toLowerCase()) ||
+                    product.description.toLowerCase().includes(text.toLowerCase()))
+            })
+
+            setFilteredBySearchProducts([...filteredProducts]);
+            console.log([filteredProducts]);
         }
 
         DisplayAllProducts();
-    
+
     }
 
+    const handleClickOpen = () => {
+        console.log("I am here")
+        setOpen(true);
+    };
 
 
+
+    const handleDelete = async () => {
+        console.log("I am here");
+        setConfirm(true);
+        const token = sessionStorage.getItem('myTokenName');
+
+        try {
+
+            // const response = axios.delete(`http://localhost:8080/api/products/${product.id}`,
+            //     {
+            //         headers: {
+            //             //  'Content-Type': 'application/json',
+            //             'Authorization': `Bearer ${token}`
+            //         }
+            //     });
+
+            // console.log("Product has been deleted", response);
+
+            // toast(`Product ${product.name} deleted successfully`, {
+            //     className: "toast-message",
+            // });
+
+        }
+        catch (error) {
+            // Handle product Deletion error 
+            console.error('Product Deletion failed:', error.response ? error.response.data : error.message);
+            setError(error.response ? error.response.data : error.message);
+        }
+    };
+
+   
 
     const [isLoggedIn, setIsLoggedIn, error, setError] = useContext(IsLoggedInContext);
 
@@ -87,6 +138,8 @@ export default function Products() {
             setAlignment(newAlignment);
         }
     };
+
+   
 
     let [categories, setCategories] = useState([]);
     let [products, setProducts] = useState([
@@ -108,7 +161,7 @@ export default function Products() {
 
 
     const DisplayAllProducts = () => {
-        if(!(searchText === undefined || searchText.length === 0)) {
+        if (!(searchText === undefined || searchText.length === 0)) {
             if (value.toLowerCase().includes('')) {
                 if (alignment.toLowerCase().includes('all')) {
                     return (
@@ -120,7 +173,7 @@ export default function Products() {
                             style={{ margin: "50px" }}>
                             {filteredBySearchProducts.map((product) => (
                                 <Grid item md={4} key={product.id} style={{ display: 'flex' }}>
-                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex' }}>
+                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -128,7 +181,7 @@ export default function Products() {
                                                 height="194"
                                                 image={"" + product.imageUrl}
                                                 title="Contemplative Reptile"
-        
+
                                             />
                                             <CardContent style={{ display: 'flex' }}>
                                                 <Stack direction={"row"} justifyContent={"space-between"} margin={"5px"}>
@@ -141,13 +194,15 @@ export default function Products() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
-                                        <Link to={`/products/${product.id}`}>
-                                            <Button size="lg">Buy</Button>
+                                            <Link to={`/products/${product.id}`}>
+                                                <Button size="lg">Buy</Button>
                                             </Link>
                                             <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
-                                                    <EditIcon />
-                                                    <DeleteIcon />
+                                                <Link to={`/products/modifyProduct/${product.id}`}>
+                                                        <EditIcon style={{ textDecoration: "none" }}></EditIcon>
+                                                    </Link>
+                                                    <DialogueBox {...product} />
                                                 </Stack>
                                             </Grid>
                                         </CardActions>
@@ -166,8 +221,8 @@ export default function Products() {
                         style={{ margin: "50px" }}>
                         {(filteredBySearchProducts.filter(filteredProduct =>
                             filteredProduct.category.toLowerCase().includes(alignment.toLowerCase()))).map((product) => (
-                                <Grid item md={4} key={product.id} style={{ display: 'flex' }}>
-                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex' }}>
+                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit" }}>
+                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -175,7 +230,7 @@ export default function Products() {
                                                 height="194"
                                                 image={"" + product.imageUrl}
                                                 title="Contemplative Reptile"
-        
+
                                             />
                                             <CardContent style={{ display: 'flex' }}>
                                                 <Stack direction={"row"} justifyContent={"space-between"} margin={"5px"}>
@@ -188,13 +243,15 @@ export default function Products() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
-                                        <Link to={`/products/${product.id}`}>
-                                            <Button size="lg">Buy</Button>
+                                            <Link to={`/products/${product.id}`}>
+                                                <Button size="lg">Buy</Button>
                                             </Link>
                                             <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
-                                                    <EditIcon />
-                                                    <DeleteIcon />
+                                                <Link to={`/products/modifyProduct/${product.id}`}>
+                                                        <EditIcon style={{ textDecoration: "none" }}></EditIcon>
+                                                    </Link>
+                                                    <DialogueBox {...product} />
                                                 </Stack>
                                             </Grid>
                                         </CardActions>
@@ -214,8 +271,8 @@ export default function Products() {
                             alignItems="stretch"
                             style={{ margin: "50px" }}>
                             {sortedFilteredProducts.map((product) => (
-                                <Grid item md={4} key={product.id} style={{ display: 'flex' }}>
-                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex' }}>
+                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit" }}>
+                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -223,7 +280,7 @@ export default function Products() {
                                                 height="194"
                                                 image={"" + product.imageUrl}
                                                 title="Contemplative Reptile"
-        
+
                                             />
                                             <CardContent style={{ display: 'flex' }}>
                                                 <Stack direction={"row"} justifyContent={"space-between"} margin={"5px"}>
@@ -236,13 +293,15 @@ export default function Products() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
-                                        <Link to={`/products/${product.id}`}>
-                                            <Button size="lg">Buy</Button>
+                                            <Link to={`/products/${product.id}`}>
+                                                <Button size="lg">Buy</Button>
                                             </Link>
                                             <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
-                                                    <EditIcon />
-                                                    <DeleteIcon />
+                                                    <Link to={`/products/modifyProduct/${product.id}`}>
+                                                        <EditIcon style={{ textDecoration: "none" }}></EditIcon>
+                                                    </Link>
+                                                    <DialogueBox {...product} />
                                                 </Stack>
                                             </Grid>
                                         </CardActions>
@@ -261,8 +320,8 @@ export default function Products() {
                         style={{ margin: "50px" }}>
                         {(sortedFilteredProducts.filter(filteredProduct =>
                             filteredProduct.category.toLowerCase().includes(alignment.toLowerCase()))).map((product) => (
-                                <Grid item md={4} key={product.id} style={{ display: 'flex' }}>
-                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex' }}>
+                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit" }}>
+                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -270,7 +329,7 @@ export default function Products() {
                                                 height="194"
                                                 image={"" + product.imageUrl}
                                                 title="Contemplative Reptile"
-        
+
                                             />
                                             <CardContent style={{ display: 'flex' }}>
                                                 <Stack direction={"row"} justifyContent={"space-between"} margin={"5px"}>
@@ -283,13 +342,15 @@ export default function Products() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
-                                        <Link to={`/products/${product.id}`}>
-                                            <Button size="lg">Buy</Button>
+                                            <Link to={`/products/${product.id}`}>
+                                                <Button size="lg">Buy</Button>
                                             </Link>
                                             <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
-                                                    <EditIcon />
-                                                    <DeleteIcon />
+                                                    <Link to={`/products/modifyProduct/${product.id}`}>
+                                                        <EditIcon style={{ textDecoration: "none" }}></EditIcon>
+                                                    </Link>
+                                                    <DialogueBox {...product} />
                                                 </Stack>
                                             </Grid>
                                         </CardActions>
@@ -312,8 +373,8 @@ export default function Products() {
                             alignItems="stretch"
                             style={{ margin: "50px" }}>
                             {products.map((product) => (
-                                <Grid item md={4} key={product.id} style={{ display: 'flex' }}>
-                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex' }}>
+                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit" }}>
+                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -321,7 +382,7 @@ export default function Products() {
                                                 height="194"
                                                 image={"" + product.imageUrl}
                                                 title="Contemplative Reptile"
-        
+
                                             />
                                             <CardContent style={{ display: 'flex' }}>
                                                 <Stack direction={"row"} justifyContent={"space-between"} margin={"5px"}>
@@ -334,13 +395,15 @@ export default function Products() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
-                                        <Link to={`/products/${product.id}`}>
-                                            <Button size="lg">Buy</Button>
+                                            <Link to={`/products/${product.id}`}>
+                                                <Button size="lg">Buy</Button>
                                             </Link>
                                             <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
-                                                    <EditIcon />
-                                                    <DeleteIcon />
+                                                    <Link to={`/products/modifyProduct/${product.id}`}>
+                                                        <EditIcon style={{ textDecoration: "none" }}></EditIcon>
+                                                    </Link>
+                                                    <DialogueBox {...product} />
                                                 </Stack>
                                             </Grid>
                                         </CardActions>
@@ -359,8 +422,8 @@ export default function Products() {
                         style={{ margin: "50px" }}>
                         {(products.filter(filteredProduct =>
                             filteredProduct.category.toLowerCase().includes(alignment.toLowerCase()))).map((product) => (
-                                <Grid item md={4} key={product.id} style={{ display: 'flex' }}>
-                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex' }}>
+                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit" }}>
+                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -368,7 +431,7 @@ export default function Products() {
                                                 height="194"
                                                 image={"" + product.imageUrl}
                                                 title="Contemplative Reptile"
-        
+
                                             />
                                             <CardContent style={{ display: 'flex' }}>
                                                 <Stack direction={"row"} justifyContent={"space-between"} margin={"5px"}>
@@ -381,13 +444,15 @@ export default function Products() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
-                                        <Link to={`/products/${product.id}`}>
-                                            <Button size="lg">Buy</Button>
+                                            <Link to={`/products/${product.id}`}>
+                                                <Button size="lg">Buy</Button>
                                             </Link>
                                             <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
-                                                    <EditIcon />
-                                                    <DeleteIcon />
+                                                    <Link to={`/products/modifyProduct/${product.id}`}>
+                                                        <EditIcon style={{ textDecoration: "none" }}></EditIcon>
+                                                    </Link>
+                                                    <DialogueBox {...product} />
                                                 </Stack>
                                             </Grid>
                                         </CardActions>
@@ -407,8 +472,8 @@ export default function Products() {
                             alignItems="stretch"
                             style={{ margin: "50px" }}>
                             {sortedProducts.map((product) => (
-                                <Grid item md={4} key={product.id} style={{ display: 'flex' }}>
-                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex' }}>
+                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit" }}>
+                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -416,7 +481,7 @@ export default function Products() {
                                                 height="194"
                                                 image={"" + product.imageUrl}
                                                 title="Contemplative Reptile"
-        
+
                                             />
                                             <CardContent style={{ display: 'flex' }}>
                                                 <Stack direction={"row"} justifyContent={"space-between"} margin={"5px"}>
@@ -429,13 +494,15 @@ export default function Products() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
-                                        <Link to={`/products/${product.id}`}>
-                                            <Button size="lg">Buy</Button>
+                                            <Link to={`/products/${product.id}`}>
+                                                <Button size="lg">Buy</Button>
                                             </Link>
                                             <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
-                                                    <EditIcon />
-                                                    <DeleteIcon />
+                                                    <Link to={`/products/modifyProduct/${product.id}`}>
+                                                        <EditIcon style={{ textDecoration: "none" }}></EditIcon>
+                                                    </Link>
+                                                    <DialogueBox {...product} />
                                                 </Stack>
                                             </Grid>
                                         </CardActions>
@@ -454,8 +521,8 @@ export default function Products() {
                         style={{ margin: "50px" }}>
                         {(sortedProducts.filter(filteredProduct =>
                             filteredProduct.category.toLowerCase().includes(alignment.toLowerCase()))).map((product) => (
-                                <Grid item md={4} key={product.id} style={{ display: 'flex' }}>
-                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex' }}>
+                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit" }}>
+                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -463,7 +530,7 @@ export default function Products() {
                                                 height="194"
                                                 image={"" + product.imageUrl}
                                                 title="Contemplative Reptile"
-        
+
                                             />
                                             <CardContent style={{ display: 'flex' }}>
                                                 <Stack direction={"row"} justifyContent={"space-between"} margin={"5px"}>
@@ -476,13 +543,15 @@ export default function Products() {
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
-                                        <Link to={`/products/${product.id}`}>
-                                            <Button size="lg">Buy</Button>
+                                            <Link to={`/products/${product.id}`}>
+                                                <Button size="lg">Buy</Button>
                                             </Link>
                                             <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
-                                                    <EditIcon />
-                                                    <DeleteIcon />
+                                                    <Link to={`/products/modifyProduct/${product.id}`}>
+                                                        <EditIcon style={{ textDecoration: "none" }}></EditIcon>
+                                                    </Link>
+                                                    <DialogueBox {...product} />
                                                 </Stack>
                                             </Grid>
                                         </CardActions>
@@ -494,12 +563,104 @@ export default function Products() {
                 }
             }
         }
-        
+
+
+
+    }
+
+    const DialogueBox = (product) => {
+        const [open, setOpen] = React.useState(false);
+        const theme = useTheme();
+        const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+        const [error, setError] = React.useState();
+
+
+
+        const handleClickOpen = () => {
+            setOpen(true);
+        };
+
+        const handleClose = () => {
+            GetProducts();
+            DisplayAllProducts();
+            setOpen(false);
+
+            //  history('/products');
+        };
+
+        const handleDelete = async () => {
+            console.log("I am here");
+
+            const token = sessionStorage.getItem('myTokenName');
+
+            try {
+
+                const response = axios.delete(`http://localhost:8080/api/products/${product.id}`,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                console.log("Product has been deleted", response);
+                
+                setProducts(products.filter(delProduct => delProduct.id !== product.id));
+                history('/products');
+
+                toast(`Product ${product.name} deleted successfully`, {
+                    className: "toast-message",
+                });
+
+
+
+
+
+            }
+            catch (error) {
+                // Handle product Deletion error 
+                console.error('Product Deletion failed:', error.response ? error.response.data : error.message);
+                setError(error.response ? error.response.data : error.message);
+            }
+
+          //  handleClose();
+        };
+
+        return (
+            <React.Fragment>
+
+                <DeleteIcon onClick={handleClickOpen} style={{ textDecoration: "none" }}></DeleteIcon>
+
+                <Dialog
+                    fullScreen={fullScreen}
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="responsive-dialog-title"
+                >
+                    <DialogTitle id="responsive-dialog-title">
+                        {"Confirm deletion of product!"}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Are you sure you want to delete the product?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button variant="contained" onClick={handleDelete}>
+                            Ok
+                        </Button>
+                        <Button variant="outlined" onClick={handleClose}>
+                            Cancel
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </React.Fragment>
+        );
     }
     const GetProducts = async () => {
 
         try {
-            
+
             const response = await axios.get('http://localhost:8080/api/products/');
             const prods = response.data;
             products = [...prods];
@@ -524,7 +685,7 @@ export default function Products() {
             categories.push(category);
             setCategories([...categories]);
         });
-        
+
 
     }
 
@@ -542,31 +703,31 @@ export default function Products() {
                 const sortedFilteredProducts = filteredBySearchProducts;
                 setSortedProducts([...sortedProducts]);
                 setSortedFilteredProducts([...sortedFilteredProducts]);
-                
-                
+
+
 
             }
             if (event.target.value === 'default') {
-                
-                if(!(searchText === undefined || searchText.length === 0)) {
-                    console.log(searchText);
-                      const filteredProducts1 = products.filter(product => {
-                          return  (product.category.toLowerCase().includes(searchText.toLowerCase()) ||
-                                   product.name.toLowerCase().includes(searchText.toLowerCase()) ||
-                                   product.description.toLowerCase().includes(searchText.toLowerCase()))
-                          })
 
-                          setSortedFilteredProducts([...filteredProducts1]);
-                           
-                  }
-                  GetProducts();
-                const sortedProducts = products;  
+                if (!(searchText === undefined || searchText.length === 0)) {
+                    console.log(searchText);
+                    const filteredProducts1 = products.filter(product => {
+                        return (product.category.toLowerCase().includes(searchText.toLowerCase()) ||
+                            product.name.toLowerCase().includes(searchText.toLowerCase()) ||
+                            product.description.toLowerCase().includes(searchText.toLowerCase()))
+                    })
+
+                    setSortedFilteredProducts([...filteredProducts1]);
+
+                }
+                GetProducts();
+                const sortedProducts = products;
                 setSortedProducts([...products]);
-                
-                
-                
-                
-                
+
+
+
+
+
 
             }
 

@@ -1,4 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Avatar from "@material-ui/core/Avatar";
@@ -11,41 +12,107 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import NavigationBar from "../components/NavigationBar";
-import Copyright from "../components/Copyright";
-import { IsLoggedInContext } from '../components/IsLoggedInContext';
+import NavigationBar from "./NavigationBar.js"
+import Copyright from "./Copyright.js";
+import { IsLoggedInContext } from './IsLoggedInContext.js';
 import CreatableSelect from 'react-select/creatable';
-import Products from "./Product/Products";
+import Products from "./Product/Products.js";
 import CustomizedCreatableSelect from "./Product/CustomizedCreatableSelect.tsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import './Product/addProduct.css';
+import { green } from "@mui/material/colors";
+import { ContactSupportOutlined } from "@material-ui/icons";
+
 
 toast.configure();
 
+type Product = {
+    name: string;
+    category: string;
+    manufacturer: string;
+    availableItems: number;
+    price: number;
+    imageUrl: string;
+    description: string;
+  };
 
-const AddProducts = () => {
-    const [name, setName] = useState('');
-    const [manufacturer, setManufacturer] = useState('');
-    const [availableItems, setAvailableItems] = useState(0);
-    const [price, setPrice] = useState(0);
-    const [imageUrl, setImageUrl] = useState('');
-    const [description, setDescription] = useState('');
-    const [category, setCategory] = useState();
-    const history = useNavigate(); 
-    const [error, setError] = useState();
-    const [isLoggedIn, setIsLoggedIn] = useContext(IsLoggedInContext);
+const intitialState = {
+    name: "",
+    category: "",
+    manufacturer: "",
+    availableItems: 0,
+    price: 0,
+    imageUrl: "",
+    description: ""
+}
+
+const ModifyProducts = () => {
+    const { id } = useParams();
+    // const [name, setName] = useState('');
+    // const [manufacturer, setManufacturer] = useState('');
+    // const [availableItems, setAvailableItems] = useState(0);
+    // const [price, setPrice] = useState(0);
+    // const [imageUrl, setImageUrl] = useState('');
+    // const [description, setDescription] = useState('');
+    // const [category, setCategory] = useState();
+ //   const [product, setProduct] = useState();
+    const history = useNavigate();
+
+   const [product, setProduct] = useState(intitialState);
+
+   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { target } = event;
+    setProduct((prevState) => ({
+      ...prevState,
+      [target.name]: target.value,
+    }));
+  };
    
-    const gettingCategory = (e) => {
-          
-      //  console.log("category",e);
-        setCategory(e.value);
-        console.log("e.value",e.value);
-        console.log("category",category);
-       
+  const handleModifyProduct = (e) => {
+        
+    e.preventDefault();
+
+    const data = { product, id };
+
+    const token = sessionStorage.getItem('myTokenName');
+    console.log(token);
+
+    try {
+
+        axios.put(`http://localhost:8080/api/products/${id}`, { 
+                ...product
+            }, { headers: {
+              //  'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`  
+                } 
+            }); 
+         console.log("data sent:" ,product);
+        toast(`Product ${product.name} modified successfully`, {
+            className: "toast-message",
+        });
+        history('/products');
+    } catch (error) {
+        // Handle signup error 
+        console.error('Product Modification failed:', error.response ? error.response.data : error.message);
+        setError(error.response ? error.response.data : error.message);
     }
 
-   
+}
+useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get(`http://localhost:8080/api/products/${id}`);
+        setProduct(data);
+        console.log("data",data);
+
+      } catch (error: any) {
+        console.error(error.response.data);
+      }
+    })();
+  }, []);
+
+    const [isLoggedIn, setIsLoggedIn, error, setError] = useContext(IsLoggedInContext);
+
     const useStyles = makeStyles(theme => ({
         "@global": {
             body: {
@@ -73,54 +140,24 @@ const AddProducts = () => {
 
     const classes = useStyles();
 
-    const handleAddProduct = async (e) => {
-      
-        try { 
-
-            e.preventDefault();
-            const header = `Authorization: Bearer ${sessionStorage.getItem('myTokenName')}`;
-            console.log("header", header);
-            const token = sessionStorage.getItem('myTokenName');
-            
-            const response = await axios.post('http://localhost:8080/api/products', { 
-                name, 
-                category,
-                price, 
-                description, 
-                manufacturer,
-                availableItems,
-                imageUrl
-            }, { headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`  
-                } 
-            }); 
-            // Handle successful signup 
-           
-            console.log(response.data); 
-
-            
-            toast(`Product ${name} added successfully`, {
-                className: "toast-message",
-            });
-            history('/products'); 
-        } catch (error) { 
-            // Handle product addition error 
-            console.error('Add Product failed:', error.response ? error.response.data : error.message); 
-            setError(error.response ? error.response.data : error.message); 
-        }
-
-    }
     
+
+    // if (!product) {
+    //     return <div>Loading...</div>;
+        
+    //   }
+    
+
+
     return (<>
         <IsLoggedInContext.Provider value={[isLoggedIn, setIsLoggedIn, error, setError]}>
-        <NavigationBar getSearchText={""}/>
-    </IsLoggedInContext.Provider>
+            <NavigationBar getSearchText={""}/>
+        </IsLoggedInContext.Provider>
         <Container component="main" maxWidth="xs">
             <CssBaseline />
             <div className={classes.paper}>
                 <Typography component="h1" variant="h5">
-                    Add Product
+                    Modify Product
                 </Typography>
                 <form className={classes.form} noValidate>
                     <Grid container spacing={2}>
@@ -134,12 +171,22 @@ const AddProducts = () => {
                                 id="name"
                                 label="Name"
                                 autoFocus
-                                value={name}
-                                onChange={e => { setName(e.target.value) }}
+                                value={product.name || ""}
+                                onChange={handleChange}
                             />
                         </Grid>
                         <Grid item xs={12}>
-                        <CustomizedCreatableSelect gettingCategory={gettingCategory} />
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                id="category"
+                                label="Category"
+                                name="category"
+                                autoComplete="category"
+                                value={product.category || ""}
+                                onChange={handleChange}
+                            />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
@@ -150,8 +197,8 @@ const AddProducts = () => {
                                 label="Manufacturer"
                                 name="manufacturer"
                                 autoComplete="manufacturer"
-                                value={manufacturer}
-                                onChange={e => { setManufacturer(e.target.value) }}
+                                value={product.manufacturer || ""}
+                                onChange={handleChange}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -164,8 +211,8 @@ const AddProducts = () => {
                                 type="availableItems"
                                 id="availableItems"
                                 autoComplete="availableItems"
-                                value={availableItems}
-                                onChange={e => { setAvailableItems(e.target.value) }}
+                                value={product.availableItems || ""}
+                                onChange={handleChange}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -177,8 +224,8 @@ const AddProducts = () => {
                                 label="Price"
                                 type="price"
                                 id="price"
-                                value={price}
-                                onChange={e => { setPrice(e.target.value) }}
+                                value={product.price || ""}
+                                onChange={handleChange}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -191,8 +238,8 @@ const AddProducts = () => {
                                 type="imageUrl"
                                 id="imageUrl"
                                 autoComplete="imageUrl"
-                                value={imageUrl}
-                                onChange={e => { setImageUrl(e.target.value) }}
+                                value={product.imageUrl || ""}
+                                onChange={handleChange}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -205,8 +252,8 @@ const AddProducts = () => {
                                 type="description"
                                 id="description"
                                 autoComplete="description"
-                                value={description}
-                                onChange={e => { setDescription(e.target.value) }}
+                                value={product.description || ""}
+                                onChange={handleChange}
                             />
                         </Grid>
                     </Grid>
@@ -216,15 +263,15 @@ const AddProducts = () => {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={handleAddProduct}
-                    >
-                        Add Product
+                        onClick={handleModifyProduct}>
+                        Modify Product
                     </Button>
                 </form>
             </div>
         </Container>
-        </>
+    </>
+
     );
 }
 
-export default AddProducts;
+export default ModifyProducts;
