@@ -13,7 +13,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import NavigationBar from "../components/NavigationBar";
 import Copyright from "../components/Copyright";
-import { IsLoggedInContext } from '../components/IsLoggedInContext'; 
 
 
 const useStyles = makeStyles(theme => ({
@@ -47,13 +46,12 @@ export default function SignUp() {
     const classes = useStyles();
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [role, setRole] = useState(['admin','user']);
+    const [role, setRole] = useState(['user']);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState(''); 
     const [contactNumber, setContactNumber] = useState(''); 
     const [error, setError] = useState(''); // State to manage error messages 
-    const [isLoggedIn, setIsLoggedIn] = useContext(IsLoggedInContext);
     
    
     const history = useNavigate(); 
@@ -82,22 +80,7 @@ export default function SignUp() {
            
             console.log(response); 
 
-            setIsLoggedIn({
-                isLoggedIn: true
-            }, () => {
-                console.log(isLoggedIn);
-            })
-            // const header = `Authorization: Bearer ${response.data.token}`;
-            // console.log("header", header);
-           // return axios.get(URLConstants.USER_URL, { headers: { header } });
-            // try{
-            //     await axios.get('http://localhost:8080/api/users', { headers: { header } });
-
-            // } catch (error){
-            //     setError(error.response.status);
-            //     console.log("error.response.status",error.response.status)
-
-            // }
+            
 
             history('/products'); 
         } catch (error) { 
@@ -105,14 +88,33 @@ export default function SignUp() {
             console.error('Signup failed:', error.response ? error.response.data : error.message); 
             setError(error.response ? error.response.data : error.message); 
         } 
+        try{
+            const token = sessionStorage.getItem('myTokenName');
+            const response = await axios.get('http://localhost:8080/api/users',
+             { headers: {
+                
+                'Authorization': `Bearer ${token}`  
+                } 
+            }); 
+
+        } catch (error){
+            setError(error.response.status);
+            console.log("error.response.status",error.response.status)
+            if (!(error.response.status === 401 || error.response.status === 403)){
+                console.log("inside 1");
+                sessionStorage.setItem("isAuthorized", "true");
+            }
+            else {
+                sessionStorage.setItem("isAuthorized", "false");
+            }
+            
+        }
     }; 
 
 
     return (
         <>
-            <IsLoggedInContext.Provider value={[isLoggedIn, setIsLoggedIn, error, setError]}>
             <NavigationBar />
-            </IsLoggedInContext.Provider>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <div className={classes.paper}>
@@ -227,9 +229,6 @@ export default function SignUp() {
                 </div>
             </Container>
             <Copyright />
-
-
-
         </>
 
     );

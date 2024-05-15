@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Button, Typography, TextField, Box, Grid } from '@mui/material';
 import NavigationBar from '../NavigationBar';
-import IsLoggedInContext from '../IsLoggedInContext';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Stack from '@mui/material/Stack';
+import { useNavigate } from 'react-router-dom';
 
 function ProductDetail() {
   const { id } = useParams(); // Get the product id from the URL
   const [product, setProduct] = useState(null); // State for product details
   const [quantity, setQuantity] = useState(1); // State for quantity
-  const [isLoggedIn, setIsLoggedIn, error, setError] = useContext(IsLoggedInContext);
   let res;
   let [categories, setCategories] = useState([]);
   const [alignment, setAlignment] = useState('all');
+  const history = useNavigate();
 
   React.useEffect(() => {
       getCategory();
@@ -68,8 +68,9 @@ function ProductDetail() {
   };
 
   // Event handler for placing order
-  const handlePlaceOrder = () => {
-    // Add logic to place order
+  const handlePlaceOrder = (event) => {
+    console.log("event", event);
+    history(`/products/${id}/createOrder`);
     console.log(`Placing order for ${quantity} ${product.name}`);
   };
 
@@ -81,9 +82,7 @@ function ProductDetail() {
   
   return (
     <>
-    <IsLoggedInContext.Provider value={[isLoggedIn, setIsLoggedIn, error, setError]}>
         <NavigationBar />
-      </IsLoggedInContext.Provider>
       <Box
         display="flex"
         justifyContent="center"

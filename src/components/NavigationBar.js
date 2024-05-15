@@ -11,9 +11,8 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import Button from '@mui/material/Button';
 import Link from "@mui/material/Link";
-import {IsLoggedInContext} from './IsLoggedInContext';
+
 import { useNavigate } from 'react-router-dom'; 
-import { useAuth0 } from "@auth0/auth0-react";
 
 
 
@@ -25,53 +24,33 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 const AddProductLinks = () => {
 
-  console.log('document.URL',window.location.href);
-  const [navbarUserIsLogged,setnavbarUserIsLogged, error, setError] = useContext(IsLoggedInContext);
- 
-  if (window.location.href === 'http://localhost:3003/products') {
-    console.log("inside")
-  //  if(error !== 401){
+
+
+  const isAuthorized = sessionStorage.getItem('isAuthorized');
+  
+  if ((isAuthorized && isAuthorized === 'true') && window.location.href.endsWith('/products')){
+  
     return (
         <Link href="/addProduct" m={1} color="inherit" variant='body2'>Add Product</Link>
     )
-  // }
-}
+   }
 };
 
 const DisplayLinks = () => {
   const token = sessionStorage.getItem('myTokenName');
-  const [navbarUserIsLogged,setnavbarUserIsLogged, error, setError] = useContext(IsLoggedInContext);
-  
 
   const history = useNavigate(); 
  
 
- 
-
-  // const {loginWithRedirect} = useAuth0();
-  // const {logout} = useAuth0();
-  // const [checkLogin, setCheckLogin] = useState(true);
-
-  
-
   const handleLogout = () => { 
    
-    // setnavbarUserIsLogged({
-    //   navbarUserIsLogged: false
-    // }, () => {
-    //     console.log(navbarUserIsLogged);
-    // })
      sessionStorage.removeItem('myTokenName');
+     sessionStorage.removeItem('isAuthorized');
+
+    
     history('/'); 
   }; 
-  // console.log('IsLoggedInContextNav', IsLoggedInContext);
-  
-  // useEffect(() => {
-  //   (async () => {
-     
-  //     if (navbarUserIsLogged) setnavbarUserIsLogged(true);
-  //   })();
-  // }, []);
+ 
     if (token) {
       
       return (<div>

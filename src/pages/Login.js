@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -11,16 +11,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import NavigationBar from "../components/NavigationBar";
 import Copyright from "../components/Copyright";
-import { IsLoggedInContext } from '../components/IsLoggedInContext';
 import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios'; 
-import { jwtDecode } from 'jwt-decode' ;
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { green } from "@mui/material/colors";
 import '../components/login.css';
-
-
 
 
 
@@ -49,32 +43,19 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-// async function loginUser(credentials) {
-//     return fetch('http://localhost:3000/login', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify(credentials)
-//     })
-//       .then(data => data.json())
-//    }
 
-   
 
 export default function Login() {
     const classes = useStyles();
     const [username, setUsername] = useState(''); 
     const [password, setPassword] = useState(''); 
-    // const [error, setError] = useState(''); 
-    const [user, setUser] = useState();
-    const [token, setToken] = useState();
-    const [isLoggedIn, setIsLoggedIn, error, setError] = useContext(IsLoggedInContext);
+    const [error, setError] = useState(''); 
     const history = useNavigate(); 
     
   
     const handleLogin = async (e) => { 
         e.preventDefault();
+     
         try { 
             const response = await axios.post('http://localhost:8080/api/auth/signin', 
             { username, password }); 
@@ -82,35 +63,11 @@ export default function Login() {
             sessionStorage.setItem('myTokenName', response.data.token);
             console.log(sessionStorage.getItem('myTokenName'));
              
-            // const response = await axios.get('http://localhost:8080/api/users', 
-            // { username, password }); 
            
             console.log('Login successful:', response); 
 
             localStorage.setItem("token", response.data.token); //set token in localstorage
-         localStorage.setItem("role", response.data.role);
-           
-         console.log("response.data.token", response.data.token);
-         console.log("response.data.role", response.data.role);
-
-            setIsLoggedIn({
-                isLoggedIn: true,
-                token: response.data.token
-            }, () => {
-                console.log("isLoggedIn",isLoggedIn);
-                console.log(token);
-            })
-            // const header = `Authorization: Bearer ${response.data.token}`;
-            // console.log("header", header);
-           // return axios.get(URLConstants.USER_URL, { headers: { header } });
-            // try{
-            //     await axios.get('http://localhost:8080/api/users', { headers: { header } });
-
-            // } catch (error){
-            //     setError(error.response.status);
-            //     console.log("error.response.status",error.response.status)
-
-            // }
+         
            
                 history('/products'); 
 
@@ -121,15 +78,37 @@ export default function Login() {
             console.error('Login failed:', error.response ? error.response.data : error.message); 
             setError('Invalid username or password.'); 
         } 
+
+        try{
+            const token = sessionStorage.getItem('myTokenName');
+            const response = await axios.get('http://localhost:8080/api/users',
+             { headers: {
+                
+                'Authorization': `Bearer ${token}`  
+                } 
+            }); 
+
+        } catch (error){
+            setError(error.response.status);
+            console.log("error.response.status",error.response.status);
+            if (!(error.response.status === 401 || error.response.status === 403)){
+                console.log("inside 1");
+                sessionStorage.setItem("isAuthorized", "true");
+            }
+            else {
+                sessionStorage.setItem("isAuthorized", "false");
+            }
+            
+        }
+
+        
     }; 
     
   
         
     return (
         <>
-           <IsLoggedInContext.Provider value={[isLoggedIn, setIsLoggedIn, error, setError]}>
             <NavigationBar />
-            </IsLoggedInContext.Provider>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <div className={classes.paper}>
@@ -189,9 +168,6 @@ export default function Login() {
                 </div>
             </Container>
             <Copyright />
-
-
-
         </>
 
     );

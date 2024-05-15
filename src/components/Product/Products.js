@@ -47,7 +47,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Products() {
     const [alignment, setAlignment] = useState('all');
-    const [open, setOpen] = useState(false);
     const [value, setValue] = React.useState('');
     let [newProducts, setNewProducts] = React.useState([]);
     const [sortedProducts, setSortedProducts] = useState([]);
@@ -58,6 +57,7 @@ export default function Products() {
     const [confirm, setConfirm] = React.useState(false);
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const history = useNavigate();
+    const isAuthorized = sessionStorage.getItem('isAuthorized');
 
     const getSearchText = (event) => {
 
@@ -84,45 +84,6 @@ export default function Products() {
 
     }
 
-    const handleClickOpen = () => {
-        console.log("I am here")
-        setOpen(true);
-    };
-
-
-
-    const handleDelete = async () => {
-        console.log("I am here");
-        setConfirm(true);
-        const token = sessionStorage.getItem('myTokenName');
-
-        try {
-
-            // const response = axios.delete(`http://localhost:8080/api/products/${product.id}`,
-            //     {
-            //         headers: {
-            //             //  'Content-Type': 'application/json',
-            //             'Authorization': `Bearer ${token}`
-            //         }
-            //     });
-
-            // console.log("Product has been deleted", response);
-
-            // toast(`Product ${product.name} deleted successfully`, {
-            //     className: "toast-message",
-            // });
-
-        }
-        catch (error) {
-            // Handle product Deletion error 
-            console.error('Product Deletion failed:', error.response ? error.response.data : error.message);
-            setError(error.response ? error.response.data : error.message);
-        }
-    };
-
-   
-
-    const [isLoggedIn, setIsLoggedIn, error, setError] = useContext(IsLoggedInContext);
 
     React.useEffect(() => {
         getCategory();
@@ -197,14 +158,14 @@ export default function Products() {
                                             <Link to={`/products/${product.id}`}>
                                                 <Button size="lg">Buy</Button>
                                             </Link>
-                                            <Grid container justifyContent="flex-end">
+                                           {isAuthorized && isAuthorized === 'true' && <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
                                                 <Link to={`/products/modifyProduct/${product.id}`}>
                                                         <EditIcon style={{ textDecoration: "none" }}></EditIcon>
                                                     </Link>
                                                     <DialogueBox {...product} />
                                                 </Stack>
-                                            </Grid>
+                                            </Grid>}
                                         </CardActions>
                                     </Card>
                                 </Grid>
@@ -246,14 +207,14 @@ export default function Products() {
                                             <Link to={`/products/${product.id}`}>
                                                 <Button size="lg">Buy</Button>
                                             </Link>
-                                            <Grid container justifyContent="flex-end">
+                                           {isAuthorized && isAuthorized === 'true' && <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
                                                 <Link to={`/products/modifyProduct/${product.id}`}>
                                                         <EditIcon style={{ textDecoration: "none" }}></EditIcon>
                                                     </Link>
                                                     <DialogueBox {...product} />
                                                 </Stack>
-                                            </Grid>
+                                            </Grid>}
                                         </CardActions>
                                     </Card>
                                 </Grid>
@@ -296,14 +257,14 @@ export default function Products() {
                                             <Link to={`/products/${product.id}`}>
                                                 <Button size="lg">Buy</Button>
                                             </Link>
-                                            <Grid container justifyContent="flex-end">
+                                          { isAuthorized && isAuthorized === 'true' && <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
                                                     <Link to={`/products/modifyProduct/${product.id}`}>
                                                         <EditIcon style={{ textDecoration: "none" }}></EditIcon>
                                                     </Link>
                                                     <DialogueBox {...product} />
                                                 </Stack>
-                                            </Grid>
+                                            </Grid> }
                                         </CardActions>
                                     </Card>
                                 </Grid>
@@ -345,14 +306,14 @@ export default function Products() {
                                             <Link to={`/products/${product.id}`}>
                                                 <Button size="lg">Buy</Button>
                                             </Link>
-                                            <Grid container justifyContent="flex-end">
+                                         {isAuthorized && isAuthorized === 'true' &&  <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
                                                     <Link to={`/products/modifyProduct/${product.id}`}>
                                                         <EditIcon style={{ textDecoration: "none" }}></EditIcon>
                                                     </Link>
                                                     <DialogueBox {...product} />
                                                 </Stack>
-                                            </Grid>
+                                            </Grid>}
                                         </CardActions>
                                     </Card>
                                 </Grid>
@@ -398,14 +359,14 @@ export default function Products() {
                                             <Link to={`/products/${product.id}`}>
                                                 <Button size="lg">Buy</Button>
                                             </Link>
-                                            <Grid container justifyContent="flex-end">
+                                          {isAuthorized && isAuthorized === 'true' &&  <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
                                                     <Link to={`/products/modifyProduct/${product.id}`}>
                                                         <EditIcon style={{ textDecoration: "none" }}></EditIcon>
                                                     </Link>
                                                     <DialogueBox {...product} />
                                                 </Stack>
-                                            </Grid>
+                                            </Grid>}
                                         </CardActions>
                                     </Card>
                                 </Grid>
@@ -447,14 +408,14 @@ export default function Products() {
                                             <Link to={`/products/${product.id}`}>
                                                 <Button size="lg">Buy</Button>
                                             </Link>
-                                            <Grid container justifyContent="flex-end">
+                                          {isAuthorized && isAuthorized === 'true' &&  <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
                                                     <Link to={`/products/modifyProduct/${product.id}`}>
                                                         <EditIcon style={{ textDecoration: "none" }}></EditIcon>
                                                     </Link>
                                                     <DialogueBox {...product} />
                                                 </Stack>
-                                            </Grid>
+                                            </Grid>}
                                         </CardActions>
                                     </Card>
                                 </Grid>
@@ -497,14 +458,14 @@ export default function Products() {
                                             <Link to={`/products/${product.id}`}>
                                                 <Button size="lg">Buy</Button>
                                             </Link>
-                                            <Grid container justifyContent="flex-end">
+                                          {isAuthorized && isAuthorized === 'true' &&  <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
                                                     <Link to={`/products/modifyProduct/${product.id}`}>
                                                         <EditIcon style={{ textDecoration: "none" }}></EditIcon>
                                                     </Link>
                                                     <DialogueBox {...product} />
                                                 </Stack>
-                                            </Grid>
+                                            </Grid>}
                                         </CardActions>
                                     </Card>
                                 </Grid>
@@ -546,14 +507,14 @@ export default function Products() {
                                             <Link to={`/products/${product.id}`}>
                                                 <Button size="lg">Buy</Button>
                                             </Link>
-                                            <Grid container justifyContent="flex-end">
+                                          {isAuthorized && isAuthorized === 'true' &&  <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
                                                     <Link to={`/products/modifyProduct/${product.id}`}>
                                                         <EditIcon style={{ textDecoration: "none" }}></EditIcon>
                                                     </Link>
                                                     <DialogueBox {...product} />
                                                 </Stack>
-                                            </Grid>
+                                            </Grid>}
                                         </CardActions>
                                     </Card>
                                 </Grid>
@@ -784,9 +745,7 @@ export default function Products() {
 
     return (
         <>
-            <IsLoggedInContext.Provider value={[isLoggedIn, setIsLoggedIn, error, setError]}>
                 <NavigationBar getSearchText={getSearchText} />
-            </IsLoggedInContext.Provider>
             <Box
                 display="flex"
                 justifyContent="center"

@@ -1,21 +1,14 @@
 import React, { useState, useContext } from "react";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import NavigationBar from "../components/NavigationBar";
-import Copyright from "../components/Copyright";
-import { IsLoggedInContext } from '../components/IsLoggedInContext';
-import CreatableSelect from 'react-select/creatable';
-import Products from "./Product/Products";
 import CustomizedCreatableSelect from "./Product/CustomizedCreatableSelect.tsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -34,7 +27,7 @@ const AddProducts = () => {
     const [category, setCategory] = useState();
     const history = useNavigate(); 
     const [error, setError] = useState();
-    const [isLoggedIn, setIsLoggedIn] = useContext(IsLoggedInContext);
+    
    
     const gettingCategory = (e) => {
           
@@ -113,9 +106,7 @@ const AddProducts = () => {
     }
     
     return (<>
-        <IsLoggedInContext.Provider value={[isLoggedIn, setIsLoggedIn, error, setError]}>
         <NavigationBar getSearchText={""}/>
-    </IsLoggedInContext.Provider>
         <Container component="main" maxWidth="xs">
             <CssBaseline />
             <div className={classes.paper}>

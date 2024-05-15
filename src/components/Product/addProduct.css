@@ -3,3 +3,9 @@
     color: #fff;
     font-size: 20px;
 }
+
+.toast-error-message {
+    background: red;
+    color: #fff;
+    font-size: 20px;
+}

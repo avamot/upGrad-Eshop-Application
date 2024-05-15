@@ -2,26 +2,16 @@ import React, { useState, useContext, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import NavigationBar from "./NavigationBar.js"
-import Copyright from "./Copyright.js";
-import { IsLoggedInContext } from './IsLoggedInContext.js';
-import CreatableSelect from 'react-select/creatable';
-import Products from "./Product/Products.js";
-import CustomizedCreatableSelect from "./Product/CustomizedCreatableSelect.tsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { green } from "@mui/material/colors";
-import { ContactSupportOutlined } from "@material-ui/icons";
 
 
 toast.configure();
@@ -48,14 +38,7 @@ const intitialState = {
 
 const ModifyProducts = () => {
     const { id } = useParams();
-    // const [name, setName] = useState('');
-    // const [manufacturer, setManufacturer] = useState('');
-    // const [availableItems, setAvailableItems] = useState(0);
-    // const [price, setPrice] = useState(0);
-    // const [imageUrl, setImageUrl] = useState('');
-    // const [description, setDescription] = useState('');
-    // const [category, setCategory] = useState();
- //   const [product, setProduct] = useState();
+    const [error, setError] = useState();
     const history = useNavigate();
 
    const [product, setProduct] = useState(intitialState);
@@ -111,7 +94,7 @@ useEffect(() => {
     })();
   }, []);
 
-    const [isLoggedIn, setIsLoggedIn, error, setError] = useContext(IsLoggedInContext);
+    
 
     const useStyles = makeStyles(theme => ({
         "@global": {
@@ -142,17 +125,10 @@ useEffect(() => {
 
     
 
-    // if (!product) {
-    //     return <div>Loading...</div>;
-        
-    //   }
-    
 
 
     return (<>
-        <IsLoggedInContext.Provider value={[isLoggedIn, setIsLoggedIn, error, setError]}>
             <NavigationBar getSearchText={""}/>
-        </IsLoggedInContext.Provider>
         <Container component="main" maxWidth="xs">
             <CssBaseline />
             <div className={classes.paper}>
