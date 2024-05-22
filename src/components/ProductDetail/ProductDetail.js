@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Button, Typography, TextField, Box, Grid } from '@mui/material';
-import NavigationBar from '../NavigationBar';
+import NavigationBar from '../../common/NavigationBar';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Stack from '@mui/material/Stack';
@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 function ProductDetail() {
   const { id } = useParams(); // Get the product id from the URL
   const [product, setProduct] = useState(null); // State for product details
-  const [quantity, setQuantity] = useState(1); // State for quantity
+  const [quantity, setQuantity] = useState(0); // State for quantity
   let res;
   let [categories, setCategories] = useState([]);
   const [alignment, setAlignment] = useState('all');
@@ -70,7 +70,7 @@ function ProductDetail() {
   // Event handler for placing order
   const handlePlaceOrder = (event) => {
     console.log("event", event);
-    history(`/products/${id}/createOrder`);
+    history(`/products/${id}/createOrder`, {state: {quantity: quantity}});
     console.log(`Placing order for ${quantity} ${product.name}`);
   };
 
@@ -112,7 +112,7 @@ function ProductDetail() {
           <Stack spacing={2}>
           <Stack direction={'row'} spacing={2}>
           <Typography variant="h6">{product.name}</Typography>
-          <Button variant="contained" style={{borderRadius:"50px", textTransform:"none"}}>Available Quantity: {product.availableItems} </Button>
+          <Button variant="contained" style={{borderRadius:"50px", textTransform:"none", backgroundColor: "#3f51b5"}}>Available Quantity: {product.availableItems- quantity} </Button>
           </Stack>
           
           <Typography>Category: <b>{product.category}</b></Typography>
@@ -122,11 +122,14 @@ function ProductDetail() {
           <TextField
             label="Enter Quantity"
             type="number"
+            InputProps={{
+              inputProps: { min: 0 }
+            }}
             value={quantity}
             style={{width:"300px"}}
             onChange={handleQuantityChange}
           />
-          <Button style={{width:"fit-content"}}
+          <Button style={{width:"fit-content", backgroundColor: "#3f51b5"}}
             variant="contained"
             color="primary"
             onClick={handlePlaceOrder}

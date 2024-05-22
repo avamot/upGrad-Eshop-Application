@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Button from "@material-ui/core/Button";
@@ -8,11 +8,11 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import NavigationBar from "../components/NavigationBar";
-import CustomizedCreatableSelect from "./Product/CustomizedCreatableSelect.tsx";
+import NavigationBar from "../../common/NavigationBar.js";
+import CustomizedCreatableSelect from "./CustomizedCreatableSelect.tsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import './Product/addProduct.css';
+import './addProduct.css';
 
 toast.configure();
 

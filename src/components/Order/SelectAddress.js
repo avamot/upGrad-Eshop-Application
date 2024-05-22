@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function SelectAddress({getAddress}) {
   const classes = useStyles();
-  const [selectAddress, setselectAddress] = React.useState('');
+  const [selectAddress, setselectAddress] = React.useState('Select...');
   
  
   let [addresses, setAddresses] = React.useState([

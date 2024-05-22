@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -9,12 +9,10 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import NavigationBar from "../components/NavigationBar";
-import Copyright from "../components/Copyright";
+import NavigationBar from "../../common/NavigationBar";
+import Copyright from "../../common/Copyright";
 import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios'; 
-import "react-toastify/dist/ReactToastify.css";
-import '../components/login.css';
 
 
 
@@ -61,8 +59,9 @@ export default function Login() {
             { username, password }); 
 
             sessionStorage.setItem('myTokenName', response.data.token);
-            console.log(sessionStorage.getItem('myTokenName'));
-             
+            sessionStorage.setItem('username', username);
+            
+            sessionStorage.setItem('userId', response.data.id);
            
             console.log('Login successful:', response); 
 
@@ -92,7 +91,7 @@ export default function Login() {
             setError(error.response.status);
             console.log("error.response.status",error.response.status);
             if (!(error.response.status === 401 || error.response.status === 403)){
-                console.log("inside 1");
+                
                 sessionStorage.setItem("isAuthorized", "true");
             }
             else {

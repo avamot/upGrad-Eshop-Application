@@ -11,8 +11,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import NavigationBar from "../components/NavigationBar";
-import Copyright from "../components/Copyright";
+import NavigationBar from "../../common/NavigationBar";
+import Copyright from "../../common/Copyright";
 
 
 const useStyles = makeStyles(theme => ({
@@ -46,7 +46,7 @@ export default function SignUp() {
     const classes = useStyles();
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [role, setRole] = useState(['user']);
+    const [role, setRole] = useState(['user', 'admin']);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState(''); 
@@ -73,8 +73,8 @@ export default function SignUp() {
                 contactNumber
             }); 
 
-            sessionStorage.setItem('myTokenName', response.data.token);
-            console.log(sessionStorage.getItem('myTokenName'));
+         
+            console.log("userId", response.data);
              
             // Handle successful signup 
            
@@ -82,33 +82,13 @@ export default function SignUp() {
 
             
 
-            history('/products'); 
+            history('/'); 
         } catch (error) { 
             // Handle signup error 
             console.error('Signup failed:', error.response ? error.response.data : error.message); 
             setError(error.response ? error.response.data : error.message); 
         } 
-        try{
-            const token = sessionStorage.getItem('myTokenName');
-            const response = await axios.get('http://localhost:8080/api/users',
-             { headers: {
-                
-                'Authorization': `Bearer ${token}`  
-                } 
-            }); 
-
-        } catch (error){
-            setError(error.response.status);
-            console.log("error.response.status",error.response.status)
-            if (!(error.response.status === 401 || error.response.status === 403)){
-                console.log("inside 1");
-                sessionStorage.setItem("isAuthorized", "true");
-            }
-            else {
-                sessionStorage.setItem("isAuthorized", "false");
-            }
-            
-        }
+        
     }; 
 
 

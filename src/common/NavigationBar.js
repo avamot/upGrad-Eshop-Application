@@ -1,7 +1,4 @@
 import { styled, alpha } from '@mui/material/styles';
-import React, { useState, useEffect, useContext }  from "react";
-
-
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -28,7 +25,7 @@ const AddProductLinks = () => {
 
   const isAuthorized = sessionStorage.getItem('isAuthorized');
   
-  if ((isAuthorized && isAuthorized === 'true') && window.location.href.endsWith('/products')){
+  if (isAuthorized && isAuthorized === 'true' && window.location.href.endsWith('/products')){
   
     return (
         <Link href="/addProduct" m={1} color="inherit" variant='body2'>Add Product</Link>
@@ -46,6 +43,7 @@ const DisplayLinks = () => {
    
      sessionStorage.removeItem('myTokenName');
      sessionStorage.removeItem('isAuthorized');
+     sessionStorage.removeItem('userId');
 
     
     history('/'); 
@@ -123,7 +121,7 @@ const NavigationBar = ({getSearchText}) => {
   
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="static" style={{backgroundColor: "#3f51b5"}}>
         <Toolbar>
           <ShoppingCartIcon></ShoppingCartIcon>
           <Typography

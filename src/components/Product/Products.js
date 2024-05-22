@@ -1,12 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
-import NavigationBar from '../NavigationBar';
-import IsLoggedInContext from '../IsLoggedInContext';
+import NavigationBar from '../../common/NavigationBar';
 import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
@@ -25,7 +24,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-//import '../Product/addProducts.css';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -53,9 +52,6 @@ export default function Products() {
     const [sortedFilteredProducts, setSortedFilteredProducts] = useState([]);
     const [filteredBySearchProducts, setFilteredBySearchProducts] = useState([]);
     let [searchText, setSearchText] = useState();
-    const theme = useTheme();
-    const [confirm, setConfirm] = React.useState(false);
-    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const history = useNavigate();
     const isAuthorized = sessionStorage.getItem('isAuthorized');
 
@@ -83,6 +79,7 @@ export default function Products() {
         DisplayAllProducts();
 
     }
+
 
 
     React.useEffect(() => {
@@ -133,8 +130,8 @@ export default function Products() {
                             alignItems="stretch"
                             style={{ margin: "50px" }}>
                             {filteredBySearchProducts.map((product) => (
-                                <Grid item md={4} key={product.id} style={{ display: 'flex' }}>
-                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
+                                <Grid item md={4} key={product.id} style={{ display: 'flex',width: "inherit"}}>
+                                    <Card sx={{ minWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -144,7 +141,7 @@ export default function Products() {
                                                 title="Contemplative Reptile"
 
                                             />
-                                            <CardContent style={{ display: 'flex' }}>
+                                            <CardContent style={{ display: 'flex', maxHeight: 100, overflow: 'auto' }}>
                                                 <Stack direction={"row"} justifyContent={"space-between"} margin={"5px"}>
                                                     <Typography gutterBottom variant="h6" component="div">{product.name}</Typography>
                                                     <Typography gutterBottom variant="h6" component="div">&#8377;{product.price}</Typography>
@@ -156,7 +153,7 @@ export default function Products() {
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
                                             <Link to={`/products/${product.id}`}>
-                                                <Button size="lg">Buy</Button>
+                                                <Button style={{backgroundColor: "#3f51b5"}} size="lg">Buy</Button>
                                             </Link>
                                            {isAuthorized && isAuthorized === 'true' && <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
@@ -182,8 +179,8 @@ export default function Products() {
                         style={{ margin: "50px" }}>
                         {(filteredBySearchProducts.filter(filteredProduct =>
                             filteredProduct.category.toLowerCase().includes(alignment.toLowerCase()))).map((product) => (
-                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit" }}>
-                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
+                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit"}}>
+                                    <Card sx={{ minWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -193,7 +190,7 @@ export default function Products() {
                                                 title="Contemplative Reptile"
 
                                             />
-                                            <CardContent style={{ display: 'flex' }}>
+                                            <CardContent style={{ display: 'flex', maxHeight: 100, overflow: 'auto' }}>
                                                 <Stack direction={"row"} justifyContent={"space-between"} margin={"5px"}>
                                                     <Typography gutterBottom variant="h6" component="div">{product.name}</Typography>
                                                     <Typography gutterBottom variant="h6" component="div">&#8377;{product.price}</Typography>
@@ -205,7 +202,7 @@ export default function Products() {
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
                                             <Link to={`/products/${product.id}`}>
-                                                <Button size="lg">Buy</Button>
+                                                <Button style={{backgroundColor: "#3f51b5"}} size="lg">Buy</Button>
                                             </Link>
                                            {isAuthorized && isAuthorized === 'true' && <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
@@ -232,8 +229,8 @@ export default function Products() {
                             alignItems="stretch"
                             style={{ margin: "50px" }}>
                             {sortedFilteredProducts.map((product) => (
-                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit" }}>
-                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
+                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit"}}>
+                                    <Card sx={{ minWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -243,7 +240,7 @@ export default function Products() {
                                                 title="Contemplative Reptile"
 
                                             />
-                                            <CardContent style={{ display: 'flex' }}>
+                                            <CardContent style={{ display: 'flex', maxHeight: 100, overflow: 'auto' }}>
                                                 <Stack direction={"row"} justifyContent={"space-between"} margin={"5px"}>
                                                     <Typography gutterBottom variant="h6" component="div">{product.name}</Typography>
                                                     <Typography gutterBottom variant="h6" component="div">&#8377;{product.price}</Typography>
@@ -255,7 +252,7 @@ export default function Products() {
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
                                             <Link to={`/products/${product.id}`}>
-                                                <Button size="lg">Buy</Button>
+                                                <Button style={{backgroundColor: "#3f51b5"}} size="lg">Buy</Button>
                                             </Link>
                                           { isAuthorized && isAuthorized === 'true' && <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
@@ -281,8 +278,8 @@ export default function Products() {
                         style={{ margin: "50px" }}>
                         {(sortedFilteredProducts.filter(filteredProduct =>
                             filteredProduct.category.toLowerCase().includes(alignment.toLowerCase()))).map((product) => (
-                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit" }}>
-                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
+                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit"}}>
+                                    <Card sx={{ minWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -292,7 +289,7 @@ export default function Products() {
                                                 title="Contemplative Reptile"
 
                                             />
-                                            <CardContent style={{ display: 'flex' }}>
+                                            <CardContent style={{ display: 'flex',maxHeight: 100, overflow: 'auto' }}>
                                                 <Stack direction={"row"} justifyContent={"space-between"} margin={"5px"}>
                                                     <Typography gutterBottom variant="h6" component="div">{product.name}</Typography>
                                                     <Typography gutterBottom variant="h6" component="div">&#8377;{product.price}</Typography>
@@ -304,7 +301,7 @@ export default function Products() {
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
                                             <Link to={`/products/${product.id}`}>
-                                                <Button size="lg">Buy</Button>
+                                                <Button style={{backgroundColor: "#3f51b5"}} size="lg">Buy</Button>
                                             </Link>
                                          {isAuthorized && isAuthorized === 'true' &&  <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
@@ -334,8 +331,8 @@ export default function Products() {
                             alignItems="stretch"
                             style={{ margin: "50px" }}>
                             {products.map((product) => (
-                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit" }}>
-                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
+                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit"}}>
+                                    <Card sx={{ minWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -345,7 +342,7 @@ export default function Products() {
                                                 title="Contemplative Reptile"
 
                                             />
-                                            <CardContent style={{ display: 'flex' }}>
+                                            <CardContent style={{ display: 'flex',maxHeight: 100, overflow: 'auto' }}>
                                                 <Stack direction={"row"} justifyContent={"space-between"} margin={"5px"}>
                                                     <Typography gutterBottom variant="h6" component="div">{product.name}</Typography>
                                                     <Typography gutterBottom variant="h6" component="div">&#8377;{product.price}</Typography>
@@ -357,7 +354,7 @@ export default function Products() {
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
                                             <Link to={`/products/${product.id}`}>
-                                                <Button size="lg">Buy</Button>
+                                                <Button style={{backgroundColor: "#3f51b5"}} size="lg">Buy</Button>
                                             </Link>
                                           {isAuthorized && isAuthorized === 'true' &&  <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
@@ -383,8 +380,8 @@ export default function Products() {
                         style={{ margin: "50px" }}>
                         {(products.filter(filteredProduct =>
                             filteredProduct.category.toLowerCase().includes(alignment.toLowerCase()))).map((product) => (
-                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit" }}>
-                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
+                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit"}}>
+                                    <Card sx={{ minWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -394,7 +391,7 @@ export default function Products() {
                                                 title="Contemplative Reptile"
 
                                             />
-                                            <CardContent style={{ display: 'flex' }}>
+                                            <CardContent style={{ display: 'flex',maxHeight: 100, overflow: 'auto' }}>
                                                 <Stack direction={"row"} justifyContent={"space-between"} margin={"5px"}>
                                                     <Typography gutterBottom variant="h6" component="div">{product.name}</Typography>
                                                     <Typography gutterBottom variant="h6" component="div">&#8377;{product.price}</Typography>
@@ -406,7 +403,7 @@ export default function Products() {
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
                                             <Link to={`/products/${product.id}`}>
-                                                <Button size="lg">Buy</Button>
+                                                <Button style={{backgroundColor: "#3f51b5"}} size="lg">Buy</Button>
                                             </Link>
                                           {isAuthorized && isAuthorized === 'true' &&  <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
@@ -433,8 +430,8 @@ export default function Products() {
                             alignItems="stretch"
                             style={{ margin: "50px" }}>
                             {sortedProducts.map((product) => (
-                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit" }}>
-                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
+                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit"}}>
+                                    <Card sx={{ minWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -444,7 +441,7 @@ export default function Products() {
                                                 title="Contemplative Reptile"
 
                                             />
-                                            <CardContent style={{ display: 'flex' }}>
+                                            <CardContent style={{ display: 'flex',maxHeight: 100, overflow: 'auto' }}>
                                                 <Stack direction={"row"} justifyContent={"space-between"} margin={"5px"}>
                                                     <Typography gutterBottom variant="h6" component="div">{product.name}</Typography>
                                                     <Typography gutterBottom variant="h6" component="div">&#8377;{product.price}</Typography>
@@ -456,7 +453,7 @@ export default function Products() {
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
                                             <Link to={`/products/${product.id}`}>
-                                                <Button size="lg">Buy</Button>
+                                                <Button style={{backgroundColor: "#3f51b5"}} size="lg">Buy</Button>
                                             </Link>
                                           {isAuthorized && isAuthorized === 'true' &&  <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
@@ -482,8 +479,8 @@ export default function Products() {
                         style={{ margin: "50px" }}>
                         {(sortedProducts.filter(filteredProduct =>
                             filteredProduct.category.toLowerCase().includes(alignment.toLowerCase()))).map((product) => (
-                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit" }}>
-                                    <Card sx={{ maxWidth: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
+                                <Grid item md={4} key={product.id} style={{ display: 'flex', width: "inherit"}}>
+                                    <Card sx={{ minHeight: 300 }} className={classes.card} style={{ padding: "0", display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                                         <CardActionArea>
                                             <CardMedia
                                                 component="img"
@@ -505,7 +502,7 @@ export default function Products() {
                                         </CardActionArea>
                                         <CardActions style={{ marginTop: "auto" }}>
                                             <Link to={`/products/${product.id}`}>
-                                                <Button size="lg">Buy</Button>
+                                                <Button style={{backgroundColor: "#3f51b5"}} size="lg">Buy</Button>
                                             </Link>
                                           {isAuthorized && isAuthorized === 'true' &&  <Grid container justifyContent="flex-end">
                                                 <Stack direction={"row"} spacing={2}>
@@ -745,6 +742,7 @@ export default function Products() {
 
     return (
         <>
+        
                 <NavigationBar getSearchText={getSearchText} />
             <Box
                 display="flex"
